@@ -3,8 +3,10 @@ package main
 import (
 	"os"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/sawilkhan/go-rest/database"
+	"github.com/sawilkhan/go-rest/handlers"
 )
 
 func main() {
@@ -64,4 +66,23 @@ func loadENV() error{
 		}
 	}
 	return nil
+}
+
+func generateApp() *fiber.App {
+	app := fiber.New()
+
+	//ping to app for health check
+	app.Get("/health", func(c *fiber.Ctx) error{
+		return c.SendString("OK")
+	})
+
+	//create library group and routes
+	libGroup := app.Group("/library")
+	libGroup.Post("/", handlers.CreateLibrary)
+	libGroup.Get("/", handlers.GetLibrary)
+
+	bookGroup := app.Group("/book")
+	bookGroup.Post("/", handlers.CreateBook)
+
+	return app
 }
