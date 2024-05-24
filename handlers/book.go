@@ -27,13 +27,13 @@ func CreateBook(c *fiber.Ctx) error{
 	libraryCollection := database.GetCollection("library")
 
 	//get the filter
-	filter := bson.M{"id": createData.LibraryId}
+	filter := bson.D{{Key: "_id", Value: createData.LibraryId}}
 	nBookData := models.Book{
 		Title : createData.Title,
 		Author: createData.Author,
 		ISBN: createData.ISBN,
 	}
-	updatePayload := bson.M{"$push": bson.M{"books": nBookData}}
+	updatePayload := bson.D{{Key: "$push", Value: bson.D{{Key: "books", Value: nBookData}}}}
 
 	//update the library collection\
 	_, err := libraryCollection.UpdateOne(context.TODO(), filter, updatePayload)

@@ -80,6 +80,7 @@ func generateApp() *fiber.App {
 	libGroup := app.Group("/library")
 	libGroup.Post("/", handlers.CreateLibrary)
 	libGroup.Get("/", handlers.GetLibrary)
+	libGroup.Delete("/:id", handlers.DeleteLibrary)
 
 	bookGroup := app.Group("/book")
 	bookGroup.Post("/", handlers.CreateBook)

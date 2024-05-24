@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/sawilkhan/go-rest/database"
@@ -48,5 +49,19 @@ func GetLibrary(c *fiber.Ctx) error{
 	}
 
 	return c.JSON(libraries)
+}
+
+func DeleteLibrary(c *fiber.Ctx) error{	
+	libraryCollection := database.GetCollection("library")
+	dId := c.Params("id")
+	fmt.Println(dId)
+
+	_, err := libraryCollection.DeleteOne(context.TODO(), bson.D{{Key: "id", Value: dId}})
+
+	if err != nil{
+		return err
+	}
+
+	return c.SendString("Library deleted successfully")
 }
 
